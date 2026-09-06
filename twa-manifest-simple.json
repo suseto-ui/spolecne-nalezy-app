@@ -1,0 +1,33 @@
+{
+  "packageId": "cz.spolecnenalezy.app",
+  "host": "https://1.1.1.1/manifest.json",
+  "name": "Společné Nálezy",
+  "launcherName": "Nález",
+  "themeColor": "#0B0E14",
+  "navigationColor": "#0B0E14",
+  "backgroundColor": "#0B0E14",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "/icon-512.png",
+  "maskableIconUrl": "/icon-maskable-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android",
+    "password": "spolecnenalezy123",
+    "keyPassword": "spolecnenalezy123"
+  },
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "/",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "iconDirectory": "public"
+}

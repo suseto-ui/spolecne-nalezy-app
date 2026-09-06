@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "Společné Nálezy",
+  "short_name": "Nálezy",
+  "description": "Evidence, správa, GPS lokalizace a AI oceňování nalezených předmětů a starožitností pomocí Gemini AI.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0B0E14",
+  "background_color": "#0B0E14",
+  "categories": ["utilities", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

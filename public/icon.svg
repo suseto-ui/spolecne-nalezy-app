@@ -1,0 +1,49 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#131A2A"/>
+      <stop offset="100%" stop-color="#0B0E14"/>
+    </linearGradient>
+    <linearGradient id="primaryGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#A58FFF"/>
+      <stop offset="50%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#00F2FE"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10.24" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bgGrad)" rx="112.64"/>
+  
+  <!-- Outer glowing rim -->
+  <rect x="40.96" y="40.96" width="430.08" height="430.08" rx="81.92" fill="none" stroke="#7C5CFC" stroke-opacity="0.3" stroke-width="7.68"/>
+
+  <!-- Icon Graphic: Camera / Magnifier / Diamond Antique Locator -->
+  <g transform="translate(256, 256)" filter="url(#glow)">
+    <!-- Base Camera / Scanner Frame -->
+    <path d="M -129.024 -64.512 
+             L -64.512 -129.024 
+             L 64.512 -129.024 
+             L 129.024 -64.512 
+             L 129.024 107.52 
+             A 34.4064 34.4064 0 0 1 94.6176 141.9264
+             L -94.6176 141.9264
+             A 34.4064 34.4064 0 0 1 -129.024 107.52 Z" 
+          fill="none" stroke="url(#primaryGrad)" stroke-width="17.92" stroke-linejoin="round" stroke-linecap="round"/>
+    
+    <!-- Central Aperture / Lens -->
+    <circle cx="0" cy="21.504" r="68.8128" fill="#0B0E14" stroke="url(#primaryGrad)" stroke-width="17.92"/>
+    <circle cx="0" cy="21.504" r="34.4064" fill="#00F2FE"/>
+
+    <!-- Sparkle / AI Star top right -->
+    <path d="M 94.6176 -94.6176 
+             Q 94.6176 -60.211200000000005 129.024 -60.211200000000005 
+             Q 94.6176 -60.211200000000005 94.6176 -25.804799999999997 
+             Q 94.6176 -60.211200000000005 60.211200000000005 -60.211200000000005 
+             Q 94.6176 -60.211200000000005 94.6176 -94.6176 Z"
+          fill="#FFB020"/>
+  </g>
+</svg>

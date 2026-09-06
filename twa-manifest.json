@@ -1,0 +1,30 @@
+{
+  "packageId": "cz.spolecnenalezy.app",
+  "host": "ais-dev-ochb7phnvq4bdvo3ldq4zb-291037164760.europe-west3.run.app",
+  "name": "Společné Nálezy",
+  "launcherName": "Nálezy",
+  "themeColor": "#0B0E14",
+  "navigationColor": "#0B0E14",
+  "backgroundColor": "#0B0E14",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://ais-dev-ochb7phnvq4bdvo3ldq4zb-291037164760.europe-west3.run.app/icon-512.png",
+  "maskableIconUrl": "https://ais-dev-ochb7phnvq4bdvo3ldq4zb-291037164760.europe-west3.run.app/icon-maskable-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://ais-dev-ochb7phnvq4bdvo3ldq4zb-291037164760.europe-west3.run.app/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  }
+}

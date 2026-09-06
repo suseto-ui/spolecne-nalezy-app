@@ -1,0 +1,27 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'spolecne-nalezy'
+
+// include ':app' // TWA (Disabled to avoid conflicts with native-app)
+
+include ':native-app'
+project(':native-app').projectDir = file('android-app/app')
+
+include ':domain'
+project(':domain').projectDir = file('android-app/domain')
+
+include ':data'
+project(':data').projectDir = file('android-app/data')

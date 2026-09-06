@@ -1,0 +1,11 @@
+{
+  "name": "Společné Nálezy",
+  "description": "Evidence, správa, GPS lokalizace a AI oceňování nalezených předmětů a starožitností pomocí Gemini AI.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

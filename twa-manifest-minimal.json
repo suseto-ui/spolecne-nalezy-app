@@ -1,0 +1,14 @@
+{
+  "packageId": "com.example.app",
+  "host": "https://example.com",
+  "name": "Example App",
+  "launcherName": "Example",
+  "themeColor": "#ffffff",
+  "navigationColor": "#ffffff",
+  "backgroundColor": "#ffffff",
+  "startUrl": "/",
+  "iconUrl": "/icon-512.png",
+  "maskableIconUrl": "/icon-maskable-512.png",
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1
+}

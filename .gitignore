@@ -1,0 +1,54 @@
+﻿# Build a vygenerované soubory
+*.apk
+*.aar
+*.ap_
+*.aab
+*.dex
+*.class
+*.jks
+*.keystore
+*.pem
+*.crt
+*.key
+*.p12
+*.pfx
+bin/
+gen/
+out/
+build/
+.artifacts/
+.agent/
+
+# IDE a mezipaměť
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.gradle/
+**/.idea/
+**/.vscode/
+
+# Lokální konfigurace a klíče
+local.properties
+**/local.properties
+secrets.properties
+**/secrets.properties
+google-services.json
+**/google-services.json
+
+# Logy a OS soubory
+*.log
+.DS_Store
+Thumbs.db
+
+# Legacy XML a testovací obrázky
+landing_ui.xml
+ui.xml
+*.png
+node_modules/
+dist/
+www/
+*.idsig
+android-app-PERPIS/
+appkanase/
