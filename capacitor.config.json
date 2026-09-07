@@ -1,10 +1,5 @@
 {
   "appId": "cz.spolecnenalezy.app",
   "appName": "SpolecneNalezy",
-  "webDir": "dist",
-  "plugins": {
-    "CapacitorHttp": {
-      "enabled": true
-    }
-  }
+  "webDir": "www"
 }

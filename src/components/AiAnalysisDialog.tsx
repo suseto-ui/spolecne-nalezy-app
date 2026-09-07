@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { ItemEntity, PromptPresetEntity, AiAnalysisResult } from "../types";
 import { StorageService } from "../services/storage";
-import { analyzeItem } from "../services/aiAnalysis";
 
 interface AiAnalysisDialogProps {
   item: ItemEntity;
@@ -93,15 +92,22 @@ export const AiAnalysisDialog: React.FC<AiAnalysisDialogProps> = ({
     setError(null);
 
     try {
-      const result = await analyzeItem(
-        item.imageLocalPath,
-        item.secondaryImageLocalPath,
-        customPrompt
-      );
-      setAnalysisResult(result);
+      const response = await fetch("/api/ai/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image1: item.imageLocalPath,
+          image2: item.secondaryImageLocalPath,
+          promptText: customPrompt,
+        }),
+      });
 
-      // Save every single analysis run automatically in history
-      StorageService.saveAnalysisRun(item.id, customPrompt, result);
+      if (!response.ok) {
+        throw new Error(`Chyba serveru: ${response.status}`);
+      }
+
+      const result: AiAnalysisResult = await response.json();
+      setAnalysisResult(result);
     } catch (err: any) {
       console.error("AI Analysis error:", err);
       setError(err?.message || "Nepodařilo se dokončit analýzu");

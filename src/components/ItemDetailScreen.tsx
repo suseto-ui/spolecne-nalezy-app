@@ -13,12 +13,9 @@ import {
   User,
   Plus,
   Compass,
-  Share2,
-  FileText,
 } from "lucide-react";
-import { ItemEntity, ItemStatusType, UserSettings, ItemLogEntry, AiAnalysisResult, SavedAnalysisEntity } from "../types";
+import { ItemEntity, ItemStatusType, UserSettings, ItemLogEntry, AiAnalysisResult } from "../types";
 import { StorageService } from "../services/storage";
-import { PdfGeneratorService } from "../utils/pdfGenerator";
 import { PillBadge } from "./common/PillBadge";
 import { AiAnalysisDialog } from "./AiAnalysisDialog";
 
@@ -37,7 +34,6 @@ export const ItemDetailScreen: React.FC<ItemDetailScreenProps> = ({
 }) => {
   const [item, setItem] = useState<ItemEntity | null>(null);
   const [logs, setLogs] = useState<ItemLogEntry[]>([]);
-  const [analysisHistory, setAnalysisHistory] = useState<SavedAnalysisEntity[]>([]);
   const [isAiDialogOpen, setIsAiDialogOpen] = useState<boolean>(false);
   const [saveToast, setSaveToast] = useState<string | null>(null);
 
@@ -58,7 +54,6 @@ export const ItemDetailScreen: React.FC<ItemDetailScreenProps> = ({
       setDescription(loadedItem.description);
       setStatus(loadedItem.itemStatus);
       setLogs(StorageService.getLogsForItem(itemId));
-      setAnalysisHistory(StorageService.getAnalysisHistory(itemId));
     }
   }, [itemId]);
 
@@ -113,94 +108,6 @@ export const ItemDetailScreen: React.FC<ItemDetailScreenProps> = ({
     }
   };
 
-  const handleDownloadPdf = async () => {
-    if (!item) return;
-    try {
-      setSaveToast("Generuji PDF protokol o nálezu...");
-      await PdfGeneratorService.downloadSingleItemReport(item, logs);
-      setSaveToast("PDF protokol úspěšně stažen!");
-      setTimeout(() => setSaveToast(null), 2500);
-    } catch (err) {
-      console.error("Chyba při generování PDF:", err);
-      setSaveToast("Nepodařilo se vygenerovat PDF.");
-      setTimeout(() => setSaveToast(null), 2500);
-    }
-  };
-
-  const handleShare = async () => {
-    const shareData = {
-      title: `Nález: ${title || "Bez názvu"}`,
-      text: `Aplikace Společné Nálezy: Podívej se na můj nález!
-Název: ${title || "Neznámý předmět"}
-Kategorie: ${category || "Nespecifikováno"}
-Odhadovaná cena: ${estimatedPriceCzk || "Nenaceněno"}
-Popis: ${description || "Bez popisu"}
-Lokace: ${item.latitude && item.longitude ? `${item.latitude}, ${item.longitude}` : "Nezaměřeno"}
-Odkaz na Google Mapy: ${item.googleMapsUrl || "Není k dispozici"}`,
-      url: window.location.origin,
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        setSaveToast("Nález byl úspěšně sdílen!");
-        setTimeout(() => setSaveToast(null), 2500);
-      } catch (err: any) {
-        if (err.name !== "AbortError") {
-          console.error("Chyba při sdílení:", err);
-          fallbackShareToClipboard(shareData.text);
-        }
-      }
-    } else {
-      fallbackShareToClipboard(shareData.text);
-    }
-  };
-
-  const fallbackShareToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(
-      () => {
-        setSaveToast("Informace zkopírovány do schránky pro sdílení!");
-        setTimeout(() => setSaveToast(null), 3000);
-      },
-      (err) => {
-        console.error("Nepodařilo se kopírovat do schránky:", err);
-      }
-    );
-  };
-
-  const handleRestoreAnalysis = (historical: SavedAnalysisEntity) => {
-    const res = historical.result;
-    setTitle(res.title);
-    setCategory(res.category);
-    setEstimatedPriceCzk(res.estimatedPriceCzk);
-    if (res.description) {
-      setDescription(res.description);
-    }
-
-    const updated: ItemEntity = {
-      ...item,
-      title: res.title,
-      category: res.category,
-      estimatedPriceCzk: res.estimatedPriceCzk,
-      numericPriceCzk: res.numericPrice,
-      description: res.description || item.description,
-      webReferencesJson: JSON.stringify(res.webReferences || []),
-      lastModifiedTimestamp: Date.now(),
-      syncStatus: "PENDING_UPLOAD",
-    };
-
-    StorageService.saveItem(
-      updated,
-      settings.currentAuthor,
-      `Obnoveno dřívější AI ocenění "${res.title}"`
-    );
-    setItem(updated);
-    setLogs(StorageService.getLogsForItem(itemId));
-    setAnalysisHistory(StorageService.getAnalysisHistory(itemId));
-    setSaveToast(`Obnoveno ocenění ze dne ${new Date(historical.timestamp).toLocaleDateString("cs-CZ")}!`);
-    setTimeout(() => setSaveToast(null), 2500);
-  };
-
   const handleApplyAiResult = (result: AiAnalysisResult) => {
     setTitle(result.title);
     setCategory(result.category);
@@ -228,7 +135,6 @@ Odkaz na Google Mapy: ${item.googleMapsUrl || "Není k dispozici"}`,
     );
     setItem(updated);
     setLogs(StorageService.getLogsForItem(itemId));
-    setAnalysisHistory(StorageService.getAnalysisHistory(itemId));
 
     setSaveToast("AI analýza aplikována!");
     setTimeout(() => setSaveToast(null), 2500);
@@ -268,22 +174,6 @@ Odkaz na Google Mapy: ${item.googleMapsUrl || "Není k dispozici"}`,
           </h2>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleDownloadPdf}
-              className="p-2 rounded-xl text-[#A58FFF] hover:bg-[#7C5CFC]/10 transition-colors"
-              title="Stáhnout PDF protokol"
-            >
-              <FileText className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={handleShare}
-              className="p-2 rounded-xl text-[#00F2FE] hover:bg-[#00F2FE]/10 transition-colors"
-              title="Sdílet nález"
-            >
-              <Share2 className="w-4 h-4" />
-            </button>
-
             <button
               onClick={handleDelete}
               className="p-2 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
@@ -579,80 +469,6 @@ Odkaz na Google Mapy: ${item.googleMapsUrl || "Není k dispozici"}`,
             </div>
           </section>
         )}
-
-        {/* AI Analysis History - Every analysis is automatically saved locally */}
-        <section className="bg-[#131A2A] rounded-2xl border border-[#7C5CFC]/20 p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#00F2FE]" />
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#8A99AD]">
-                Automatická historie AI analýz & ocenění
-              </h4>
-            </div>
-            <span className="px-2.5 py-0.5 rounded-full bg-[#00F2FE]/10 border border-[#00F2FE]/30 text-[10px] font-semibold text-[#00F2FE]">
-              Uloženo automaticky
-            </span>
-          </div>
-
-          <p className="text-xs text-[#8A99AD] leading-relaxed">
-            Každé dotázání na Gemini AI a ocenění je automaticky uloženo do lokální paměti vašeho zařízení. Můžete se tak kdykoliv vrátit k předchozím odhadům.
-          </p>
-
-          <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-            {analysisHistory.length > 0 ? (
-              analysisHistory.map((hist) => (
-                <div
-                  key={hist.id}
-                  className="p-3.5 rounded-xl bg-[#0B0E14] border border-[#7C5CFC]/15 hover:border-[#7C5CFC]/40 transition-all space-y-2 text-xs"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="font-bold text-slate-100">{hist.result.title}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">
-                        Kategorie: <span className="text-slate-300 font-medium">{hist.result.category}</span>
-                      </div>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <div className="font-mono font-extrabold text-[#00F2FE] text-sm">
-                        {hist.result.estimatedPriceCzk}
-                      </div>
-                      <div className="text-[9px] text-slate-500 mt-0.5">
-                        {new Date(hist.timestamp).toLocaleDateString("cs-CZ")} v {new Date(hist.timestamp).toLocaleTimeString("cs-CZ", { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                    </div>
-                  </div>
-
-                  {hist.promptText && (
-                    <div className="text-[11px] text-[#A58FFF] bg-[#131A2A]/40 px-2 py-1.5 rounded-lg border border-slate-800 font-mono">
-                      <span className="text-[9px] uppercase text-slate-500 block mb-0.5">Použitá instrukce:</span>
-                      "{hist.promptText}"
-                    </div>
-                  )}
-
-                  {hist.result.description && (
-                    <div className="text-[11px] text-slate-400 leading-relaxed bg-black/20 p-2 rounded-lg border border-slate-900">
-                      {hist.result.description}
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between pt-1 border-t border-slate-800/80">
-                    <span className="text-[10px] italic text-slate-500">
-                      Důvod: "{hist.result.reasoning || "Neuveden"}"
-                    </span>
-                    <button
-                      onClick={() => handleRestoreAnalysis(hist)}
-                      className="px-2.5 py-1 rounded bg-[#7C5CFC]/20 hover:bg-[#7C5CFC] border border-[#7C5CFC]/50 text-white hover:text-white text-[10px] font-bold transition-all active:scale-95"
-                    >
-                      Aplikovat tento odhad
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-xs text-slate-500 italic">Zatím nebyly spuštěny žádné AI analýzy pro tento nález.</p>
-            )}
-          </div>
-        </section>
 
         {/* History / Audit Log */}
         <section className="bg-[#131A2A] rounded-2xl border border-[#7C5CFC]/20 p-5 space-y-3">

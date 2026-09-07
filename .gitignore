@@ -18,6 +18,9 @@ out/
 build/
 .artifacts/
 .agent/
+android-app-PERPIS/
+appkanase/
+*.idsig
 
 # IDE a mezipaměť
 .idea/
@@ -30,6 +33,9 @@ build/
 **/.vscode/
 
 # Lokální konfigurace a klíče
+.env
+.env.*
+!.env.example
 local.properties
 **/local.properties
 secrets.properties
@@ -41,14 +47,11 @@ google-services.json
 *.log
 .DS_Store
 Thumbs.db
+node_modules/
+dist/
+www/
 
 # Legacy XML a testovací obrázky
 landing_ui.xml
 ui.xml
 *.png
-node_modules/
-dist/
-www/
-*.idsig
-android-app-PERPIS/
-appkanase/

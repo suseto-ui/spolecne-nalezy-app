@@ -56,14 +56,6 @@ export interface AiAnalysisResult {
   reasoning: string;
 }
 
-export interface SavedAnalysisEntity {
-  id: string;
-  itemId: string;
-  timestamp: number;
-  promptText: string;
-  result: AiAnalysisResult;
-}
-
 export interface UserSettings {
   husbandEmail: string;
   wifeEmail: string;

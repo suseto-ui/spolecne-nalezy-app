@@ -1,4 +1,4 @@
-import { ItemEntity, ItemLogEntry, PromptPresetEntity, UserSettings, ItemStatusType, SavedAnalysisEntity, AiAnalysisResult } from "../types";
+import { ItemEntity, ItemLogEntry, PromptPresetEntity, UserSettings, ItemStatusType } from "../types";
 import { INITIAL_DEMO_ITEMS, INITIAL_PROMPT_PRESETS, DEFAULT_USER_SETTINGS } from "../data/seedData";
 
 const STORAGE_KEY_ITEMS = "spolecne_nalezy_items";
@@ -6,7 +6,6 @@ const STORAGE_KEY_LOGS = "spolecne_nalezy_logs";
 const STORAGE_KEY_PRESETS = "spolecne_nalezy_presets";
 const STORAGE_KEY_SETTINGS = "spolecne_nalezy_settings";
 const STORAGE_KEY_SHARED_MANIFESTS = "spolecne_nalezy_drive_manifests";
-const STORAGE_KEY_ANALYSES = "spolecne_nalezy_analyses_history";
 
 export class StorageService {
   // Items
@@ -267,48 +266,11 @@ export class StorageService {
     }
   }
 
-  // AI Analysis History - Save every single analysis run automatically
-  static saveAnalysisRun(itemId: string, promptText: string, result: AiAnalysisResult): void {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY_ANALYSES);
-      const history: SavedAnalysisEntity[] = raw ? JSON.parse(raw) : [];
-      const newEntry: SavedAnalysisEntity = {
-        id: "analysis-" + Date.now() + "-" + Math.random().toString(36).substring(2, 7),
-        itemId,
-        timestamp: Date.now(),
-        promptText,
-        result,
-      };
-      history.unshift(newEntry);
-      localStorage.setItem(STORAGE_KEY_ANALYSES, JSON.stringify(history));
-
-      // Also add a log entry for auditing
-      this.addLog(
-        itemId,
-        `AI analýza automaticky zaznamenána: "${result.title}" s odhadem ${result.estimatedPriceCzk}`,
-        "Systém"
-      );
-    } catch (e) {
-      console.error("Failed to save analysis run locally", e);
-    }
-  }
-
-  static getAnalysisHistory(itemId: string): SavedAnalysisEntity[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY_ANALYSES);
-      const history: SavedAnalysisEntity[] = raw ? JSON.parse(raw) : [];
-      return history.filter((h) => h.itemId === itemId);
-    } catch {
-      return [];
-    }
-  }
-
   static clearAllData(): void {
     localStorage.removeItem(STORAGE_KEY_ITEMS);
     localStorage.removeItem(STORAGE_KEY_LOGS);
     localStorage.removeItem(STORAGE_KEY_PRESETS);
     localStorage.removeItem(STORAGE_KEY_SETTINGS);
     localStorage.removeItem(STORAGE_KEY_SHARED_MANIFESTS);
-    localStorage.removeItem(STORAGE_KEY_ANALYSES);
   }
 }

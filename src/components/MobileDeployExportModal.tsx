@@ -223,42 +223,6 @@ Aplikace se připojuje k backendu na:
       };
       zip.file("capacitor.config.json", JSON.stringify(capacitorConfig, null, 2));
 
-      // 6. assetlinks.json for Digital Asset Links
-      const assetlinksJson = [
-        {
-          relation: ["delegate_permission/common.handle_all_urls"],
-          target: {
-            namespace: "android_app",
-            package_name: "cz.spolecnenalezy.app",
-            sha256_cert_fingerprints: [
-              "14:6D:E9:7D:01:A0:6C:C1:F6:28:C2:59:7A:B4:DE:6E:9A:BA:5D:84:DE:C2:08:92:4B:B2:7D:A6:61:52:F5:BD"
-            ]
-          }
-        }
-      ];
-      zip.file("assetlinks.json", JSON.stringify(assetlinksJson, null, 2));
-
-      // 7. manifest.json
-      const manifestObj = {
-        id: "/",
-        name: "Společné Nálezy",
-        short_name: "Nálezy",
-        description: "Evidence, správa, GPS lokalizace a AI oceňování nalezených předmětů a starožitností pomocí Gemini AI.",
-        start_url: "/",
-        scope: "/",
-        display: "standalone",
-        orientation: "portrait-primary",
-        theme_color: "#0B0E14",
-        background_color: "#0B0E14",
-        categories: ["utilities", "lifestyle", "productivity"],
-        icons: [
-          { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-          { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
-          { src: "/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" }
-        ]
-      };
-      zip.file("manifest.json", JSON.stringify(manifestObj, null, 2));
-
       // Generate zip and trigger browser download
       const content = await zip.generateAsync({ type: "blob" });
       const blobUrl = URL.createObjectURL(content);
@@ -505,14 +469,6 @@ Aplikace se připojuje k backendu na:
                 <div className="flex items-center gap-2">
                   <span className="text-emerald-400">✓</span>
                   <span>capacitor.config.json (Android Studio konfigurace)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-400">✓</span>
-                  <span>assetlinks.json (Digital Asset Links ověření pro TWA bez URL lišty)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-400">✓</span>
-                  <span>manifest.json (Web Application Manifest s ikonami a offline režimem)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-emerald-400">✓</span>

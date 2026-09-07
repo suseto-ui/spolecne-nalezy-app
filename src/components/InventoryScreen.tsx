@@ -12,14 +12,12 @@ import {
   TrendingUp,
   Smartphone,
   Download,
-  FileText,
 } from "lucide-react";
 import { AppHeader } from "./common/AppHeader";
 import { TechCard } from "./common/TechCard";
 import { PillBadge } from "./common/PillBadge";
 import { MobileDeployExportModal } from "./MobileDeployExportModal";
 import { ItemEntity, ItemStatusType, UserSettings } from "../types";
-import { PdfGeneratorService } from "../utils/pdfGenerator";
 
 interface InventoryScreenProps {
   items: ItemEntity[];
@@ -64,24 +62,6 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({
   const [statusFilter, setStatusFilter] = useState<ItemStatusType | "ALL">("ALL");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isDeployModalOpen, setIsDeployModalOpen] = useState<boolean>(false);
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState<boolean>(false);
-  const [pdfToast, setPdfToast] = useState<string | null>(null);
-
-  const handleDownloadCatalog = async () => {
-    try {
-      setIsGeneratingPdf(true);
-      setPdfToast("Připravuji PDF katalog všech nálezů...");
-      await PdfGeneratorService.downloadInventoryReport(filteredItems);
-      setPdfToast("PDF katalog úspěšně stažen!");
-      setTimeout(() => setPdfToast(null), 3000);
-    } catch (err) {
-      console.error("Chyba při exportu PDF:", err);
-      setPdfToast("Chyba: Nepodařilo se vygenerovat PDF.");
-      setTimeout(() => setPdfToast(null), 3000);
-    } finally {
-      setIsGeneratingPdf(false);
-    }
-  };
 
   // Real-time filtering based on item title or description fields
   const query = searchQuery.trim().toLowerCase();
@@ -109,14 +89,6 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({
       />
 
       <main className="max-w-5xl mx-auto px-4 py-5 space-y-5">
-        {/* PDF Toast Notification */}
-        {pdfToast && (
-          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 bg-[#7C5CFC] border border-[#00F2FE]/40 text-white text-xs font-bold rounded-full shadow-[0_0_15px_rgba(124,92,252,0.5)] flex items-center gap-1.5 animate-fadeIn">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#00F2FE] animate-ping" />
-            <span>{pdfToast}</span>
-          </div>
-        )}
-
         {/* Metric summary banner */}
         <div className="grid grid-cols-2 gap-3">
           <div className="p-4 rounded-2xl bg-[#131A2A] border border-[#7C5CFC]/20 flex items-center justify-between">
@@ -164,32 +136,6 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({
           >
             <Download className="w-3.5 h-3.5" />
             <span>Otevřít instalaci / Export</span>
-          </button>
-        </div>
-
-        {/* PDF Export Banner */}
-        <div className="p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-[#131A2A] to-[#1A1F35] border border-[#7C5CFC]/25 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#7C5CFC]/15 border border-[#7C5CFC]/30 flex items-center justify-center text-[#A58FFF] flex-shrink-0">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-                Generovat PDF report / katalog
-              </h4>
-              <p className="text-[11px] text-[#8A99AD]">
-                Vytvořte a stáhněte si přehledný tištěný katalog s náhledy, cenami a detaily všech {filteredItems.length} aktuálně vyfiltrovaných položek.
-              </p>
-            </div>
-          </div>
-          <button
-            id="btn-inventory-download-pdf"
-            onClick={handleDownloadCatalog}
-            disabled={isGeneratingPdf}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#7C5CFC] hover:bg-[#8A6FFF] text-white text-xs font-bold shadow-md flex items-center justify-center gap-2 whitespace-nowrap transition-transform active:scale-95 disabled:opacity-50"
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>{isGeneratingPdf ? "Generování..." : "Stáhnout PDF katalog"}</span>
           </button>
         </div>
 

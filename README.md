@@ -23,3 +23,25 @@ npm run build
 # Spuštění produkčního serveru
 npm start
 ```
+
+## Instalace do mobilu
+
+Aplikaci lze nainstalovat do mobilního zařízení dvěma způsoby:
+
+### 📱 Okamžitá instalace (PWA)
+Otevřete v prohlížeči: **https://ais-dev-ochb7phnvq4bdvo3ldq4zb-291037164760.europe-west3.run.app** a přidejte na plochu.
+
+### 🤖 Android APK
+Pro sestavení a instalaci nativního APK balíčku použijte:
+```bash
+# Windows (PowerShell - doporučeno)
+.\[install.ps1](install.ps1)
+
+# Windows (CMD)
+[install.bat](install.bat)
+
+# Linux/macOS
+./build-android-apk.sh
+```
+
+Podrobný návod: [README-INSTALL-TESTING.md](README-INSTALL-TESTING.md)
